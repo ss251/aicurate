@@ -7,18 +7,18 @@ import {
   Gift, 
   LayoutDashboard, 
   Bot,
-  Home
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const tabs = [
   {
-    label: 'Avatar Profile',
+    label: 'Profile',
     icon: User,
     path: '/quiz',
   },
   {
-    label: 'Review Hub',
+    label: 'Reviews',
     icon: Star,
     path: '/reviews',
   },
@@ -33,7 +33,7 @@ const tabs = [
     path: '/dashboard',
   },
   {
-    label: 'Miss Dappai',
+    label: 'AI Guide',
     icon: Bot,
     path: '/directory',
   },
@@ -47,8 +47,8 @@ export function TabBar() {
   if (pathname === '/') return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 pb-safe">
-      <nav className="flex justify-around items-center h-16 max-w-screen-sm mx-auto px-4">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-[env(safe-area-inset-bottom)] shadow-lg">
+      <nav className="flex justify-around items-center h-[4.5rem] max-w-screen-sm mx-auto px-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;
           const Icon = tab.icon;
@@ -57,13 +57,27 @@ export function TabBar() {
             <button
               key={tab.path}
               onClick={() => router.push(tab.path)}
-              className={cn(
-                'flex flex-col items-center justify-center w-full h-full space-y-1',
-                isActive ? 'text-blue-600' : 'text-gray-600'
-              )}
+              className="relative w-full h-full"
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{tab.label}</span>
+              <motion.div
+                className={cn(
+                  'flex flex-col items-center justify-center w-full h-full',
+                  isActive ? 'text-blue-600' : 'text-gray-400'
+                )}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Icon className="w-6 h-6 mb-0.5" strokeWidth={2} />
+                <span className="text-[10px] font-medium tracking-tight opacity-85">
+                  {tab.label}
+                </span>
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute -top-2 w-1 h-1 rounded-full bg-blue-600"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.div>
             </button>
           );
         })}
