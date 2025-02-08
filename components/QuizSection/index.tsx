@@ -101,7 +101,7 @@ export function QuizSection() {
             </h1>
             {currentQuestion === 0 && (
               <p className="text-center text-gray-600">
-                Your avatar evolves with you. It is like an instant polaroid of who you are right now. So smile and get started now to get your first reward.
+                Your avatar grows and evolves with every step you take—it&apos;s a snapshot of who you are today. Dive in, answer a few fun questions, and unlock your first reward on this exciting journey!
               </p>
             )}
 
