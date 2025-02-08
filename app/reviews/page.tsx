@@ -8,7 +8,6 @@ import { ShareMenu } from '@/components/ShareMenu'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { TabBar } from '@/components/navigation/TabBar'
 import { useReviewFormStore } from '@/store/review-form'
 
 interface ReviewFormData {
@@ -513,8 +512,6 @@ export default function ReviewPage() {
         onClose={() => setShowShareOptions(false)}
         onShare={handleShare}
       />
-
-      <TabBar onNavigate={handleNavigation} />
     </div>
   )
 } 
