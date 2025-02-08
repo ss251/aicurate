@@ -41,9 +41,10 @@ const tabs = [
 
 interface TabBarProps {
   onNavigate?: (path: string) => void;
+  className?: string;
 }
 
-export function TabBar({ onNavigate }: TabBarProps = {}) {
+export function TabBar({ onNavigate, className }: TabBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -59,7 +60,10 @@ export function TabBar({ onNavigate }: TabBarProps = {}) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-[env(safe-area-inset-bottom)] shadow-lg">
+    <div className={cn(
+      "bg-white border-t border-gray-100 pb-[env(safe-area-inset-bottom)] shadow-lg",
+      className
+    )}>
       <nav className="flex justify-around items-center h-[4.5rem] max-w-screen-sm mx-auto px-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;

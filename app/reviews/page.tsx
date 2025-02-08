@@ -220,14 +220,14 @@ export default function ReviewPage() {
 
   return (
     <div className="pb-20">
-      <header className="p-4 border-b sticky top-0 bg-white z-10">
+      <header className="p-4 border-b sticky top-0 bg-white z-10 backdrop-blur-lg bg-white/80">
         <h1 className="text-xl font-semibold">AI App Review</h1>
         <p className="text-sm text-gray-600">Rate and review AI tools to help the community</p>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-6 snap-y snap-mandatory">
         {/* Basic Info */}
-        <div className="space-y-4">
+        <div className="space-y-4 snap-start">
           <div>
             <label className="block font-medium mb-1">App Name</label>
             <input
@@ -237,7 +237,7 @@ export default function ReviewPage() {
                 maxLength: { value: 50, message: 'App name must be less than 50 characters' }
               })}
               className={cn(
-                "w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500",
+                "w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 touch-manipulation",
                 errors.appName && "border-red-500"
               )}
               placeholder="Enter app name"
@@ -252,7 +252,7 @@ export default function ReviewPage() {
             <select
               {...register('appCategory', { required: 'Please select a category' })}
               className={cn(
-                "w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500",
+                "w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 touch-manipulation",
                 errors.appCategory && "border-red-500"
               )}
             >
@@ -268,7 +268,7 @@ export default function ReviewPage() {
         </div>
 
         {/* AI Consultation */}
-        <div className="bg-white rounded-lg border p-4">
+        <div className="bg-white rounded-lg border p-4 snap-start">
           <label className="flex items-start gap-3">
             <input
               type="checkbox"
@@ -305,7 +305,7 @@ export default function ReviewPage() {
         </div>
 
         {/* Ratings */}
-        <div className="space-y-6">
+        <div className="space-y-6 snap-start">
           <h3 className="font-medium">Ratings</h3>
           {ratingCategories.map(category => (
             <div key={category.id} className="flex flex-col gap-2">
@@ -319,7 +319,7 @@ export default function ReviewPage() {
         </div>
 
         {/* Pros & Cons */}
-        <div className="space-y-4">
+        <div className="space-y-4 snap-start">
           <div>
             <label className="block font-medium mb-2">Pros</label>
             <div className="flex gap-2 mb-2">
@@ -392,7 +392,7 @@ export default function ReviewPage() {
         </div>
 
         {/* Additional Feedback */}
-        <div className="space-y-4">
+        <div className="space-y-4 snap-start">
           <div>
             <label className="block font-medium mb-2">Would you recommend it?</label>
             <textarea
@@ -435,7 +435,7 @@ export default function ReviewPage() {
         </div>
 
         {/* Create Similar App */}
-        <div className="bg-purple-50 rounded-lg p-4">
+        <div className="bg-purple-50 rounded-lg p-4 snap-start">
           <label className="flex items-start gap-3">
             <input
               type="checkbox"
@@ -476,13 +476,13 @@ export default function ReviewPage() {
           </div>
         )}
 
-        {/* Submit & Share */}
-        <div className="fixed bottom-16 left-0 right-0 p-4 bg-white border-t">
+        {/* Bottom Navigation */}
+        <div className="fixed bottom-16 left-0 right-0 p-4 bg-white/80 border-t backdrop-blur-lg">
           <div className="flex gap-2 max-w-screen-sm mx-auto">
             <button
               type="submit"
               disabled={formIsSubmitting}
-              className="flex-1 py-3 px-6 bg-blue-600 text-white rounded-lg font-medium disabled:opacity-50"
+              className="flex-1 py-3 px-6 bg-blue-600 text-white rounded-lg font-medium disabled:opacity-50 active:scale-[0.98] transition-transform touch-manipulation"
             >
               {formIsSubmitting ? (
                 <span className="flex items-center justify-center gap-2">
@@ -500,7 +500,7 @@ export default function ReviewPage() {
             <button
               type="button"
               onClick={() => setShowShareOptions(prev => !prev)}
-              className="p-3 bg-green-600 text-white rounded-lg"
+              className="p-3 bg-green-600 text-white rounded-lg active:scale-[0.98] transition-transform touch-manipulation"
             >
               <Share2 className="w-5 h-5" />
             </button>

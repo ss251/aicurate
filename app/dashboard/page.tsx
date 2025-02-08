@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Trophy, Clock, Users } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface TrendingApp {
   id: string
@@ -339,12 +340,12 @@ export default function UserDashboard() {
             <button
               key={tab}
               onClick={() => setSelectedTab(tab)}
-              disabled={isLoading}
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={cn(
+                "px-3 py-2 rounded-md text-sm transition-all touch-manipulation",
                 selectedTab === tab
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              } ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-[0.98]'
+              )}
             >
               {tab === 'analytics' && <Trophy className="w-4 h-4 inline-block mr-1" />}
               {tab === 'challenges' && <Users className="w-4 h-4 inline-block mr-1" />}

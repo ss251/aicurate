@@ -48,7 +48,7 @@ export function Onboarding() {
 
   const handleNext = () => {
     if (currentSlide === slides.length - 1) {
-      router.push('/quiz');
+      router.push('/landing');
     } else {
       setCurrentSlide(prev => prev + 1);
       if ('vibrate' in navigator) {
