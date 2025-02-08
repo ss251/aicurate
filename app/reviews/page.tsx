@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils'
 import { ShareMenu } from '@/components/ShareMenu'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { useLocalStorage } from '@/hooks/use-local-storage'
 import { useRouter } from 'next/navigation'
 import { TabBar } from '@/components/navigation/TabBar'
+import { useReviewFormStore } from '@/store/review-form'
 
 interface ReviewFormData {
   appName: string
@@ -55,8 +55,7 @@ export default function ReviewPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{type: 'pro'|'con', index: number}|null>(null)
 
-  // Form persistence
-  const [savedFormData, setSavedFormData] = useLocalStorage<Partial<ReviewFormData>>('review-form-data', {})
+  const { formData, setFormData, clearForm } = useReviewFormStore()
 
   const {
     register,
@@ -65,12 +64,7 @@ export default function ReviewPage() {
     setValue,
     watch
   } = useForm<ReviewFormData>({
-    defaultValues: {
-      ...savedFormData,
-      ratings: savedFormData?.ratings || {},
-      pros: savedFormData?.pros || [],
-      cons: savedFormData?.cons || []
-    }
+    defaultValues: formData
   })
 
   // Memoized star rating component
@@ -130,15 +124,15 @@ export default function ReviewPage() {
   }, [setValue, watch])
 
   // Save form data on change
-  const formData = watch()
+  const currentFormData = watch()
   useEffect(() => {
     const debouncedSave = setTimeout(() => {
       if (isDirty) {
-        setSavedFormData(formData)
+        setFormData(currentFormData)
       }
     }, 500)
     return () => clearTimeout(debouncedSave)
-  }, [formData, isDirty, setSavedFormData])
+  }, [currentFormData, isDirty, setFormData])
 
   const handleRatingChange = (categoryId: string, value: number) => {
     setValue(`ratings.${categoryId}`, value, { shouldDirty: true });
@@ -199,13 +193,13 @@ export default function ReviewPage() {
   const handleNavigation = useCallback((path: string) => {
     if (isDirty) {
       if (window.confirm('You have unsaved changes. Are you sure you want to leave?')) {
-        setSavedFormData({})  // Clear saved data if user confirms leaving
+        clearForm()  // Clear saved data if user confirms leaving
         router.push(path)
       }
     } else {
       router.push(path)
     }
-  }, [isDirty, router, setSavedFormData])
+  }, [isDirty, router, clearForm])
 
   // Clear saved data on successful submit
   const onSubmit = async (data: ReviewFormData) => {
@@ -213,7 +207,7 @@ export default function ReviewPage() {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       console.log('Review submitted:', data)
-      setSavedFormData({})
+      clearForm()
       toast.success('Review submitted successfully!')
       router.push('/dashboard')  // Navigate after successful submit
     } catch (error) {
@@ -346,7 +340,7 @@ export default function ReviewPage() {
               </button>
             </div>
             <div className="space-y-2">
-              {formData.pros.map((pro: string, index: number) => (
+              {(formData.pros || []).map((pro: string, index: number) => (
                 <div key={index} className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
                   <span className="flex-1 text-sm">{pro}</span>
                   <button
@@ -381,7 +375,7 @@ export default function ReviewPage() {
               </button>
             </div>
             <div className="space-y-2">
-              {formData.cons.map((con: string, index: number) => (
+              {(formData.cons || []).map((con: string, index: number) => (
                 <div key={index} className="flex items-center gap-2 p-2 bg-red-50 rounded-lg">
                   <span className="flex-1 text-sm">{con}</span>
                   <button
