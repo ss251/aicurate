@@ -226,43 +226,6 @@ export default function ReviewPage() {
       </header>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-6">
-        {/* AI Opinion Section */}
-        <div className="bg-white rounded-lg border p-4">
-          <label className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              checked={showAIOpinion}
-              onChange={(e) => setShowAIOpinion(e.target.checked)}
-              className="mt-1"
-            />
-            <div>
-              <span className="font-medium">Would you like to consult Madame Dappai&apos;s AI opinion?</span>
-              <p className="text-sm text-gray-600">Get AI-powered insights about this app</p>
-            </div>
-          </label>
-
-          {showAIOpinion && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-4 bg-blue-50 rounded-lg"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                  🤖
-                </div>
-                <h3 className="font-medium">Madame Dappai&apos;s Analysis</h3>
-              </div>
-              <p className="text-sm text-blue-800">
-                Based on my analysis of thousands of reviews and usage patterns, this app shows strong potential with notable strengths in [features]. Users particularly appreciate [specific aspect], though there&apos;s room for improvement in [area].
-              </p>
-              <button className="text-sm text-blue-600 mt-2 hover:underline">
-                Read full analysis →
-              </button>
-            </motion.div>
-          )}
-        </div>
-
         {/* Basic Info */}
         <div className="space-y-4">
           <div>
@@ -302,6 +265,43 @@ export default function ReviewPage() {
               <p className="mt-1 text-sm text-red-500">{errors.appCategory.message}</p>
             )}
           </div>
+        </div>
+
+        {/* AI Consultation */}
+        <div className="bg-white rounded-lg border p-4">
+          <label className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              checked={showAIOpinion}
+              onChange={(e) => setShowAIOpinion(e.target.checked)}
+              className="mt-1"
+            />
+            <div>
+              <span className="font-medium">Would you like to consult Madame Dappai&apos;s AI opinion?</span>
+              <p className="text-sm text-gray-600">Get AI-powered insights about this app</p>
+            </div>
+          </label>
+
+          {showAIOpinion && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 p-4 bg-blue-50 rounded-lg"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                  🤖
+                </div>
+                <h3 className="font-medium">Madame Dappai&apos;s Analysis</h3>
+              </div>
+              <p className="text-sm text-blue-800">
+                Based on my analysis of thousands of reviews and usage patterns, this app shows strong potential with notable strengths in [features]. Users particularly appreciate [specific aspect], though there&apos;s room for improvement in [area].
+              </p>
+              <button className="text-sm text-blue-600 mt-2 hover:underline">
+                Read full analysis →
+              </button>
+            </motion.div>
+          )}
         </div>
 
         {/* Ratings */}
