@@ -132,7 +132,7 @@ export function QuizSection() {
           >
             <div className="relative w-full aspect-square max-w-[400px] mx-auto">
               <Image
-                src="/madameai_nft.jpg"
+                src="/madamenft2.jpg"
                 alt="Your NFT"
                 fill
                 className="object-cover rounded-lg shadow-xl"
