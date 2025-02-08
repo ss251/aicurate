@@ -13,9 +13,9 @@ import { motion } from 'framer-motion';
 
 const tabs = [
   {
-    label: 'Profile',
-    icon: User,
-    path: '/quiz',
+    label: 'AI Guide',
+    icon: Bot,
+    path: '/directory',
   },
   {
     label: 'Reviews',
@@ -33,9 +33,9 @@ const tabs = [
     path: '/dashboard',
   },
   {
-    label: 'AI Guide',
-    icon: Bot,
-    path: '/directory',
+    label: 'Profile',
+    icon: User,
+    path: '/quiz',
   },
 ];
 
