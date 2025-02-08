@@ -39,12 +39,24 @@ const tabs = [
   },
 ];
 
-export function TabBar() {
+interface TabBarProps {
+  onNavigate?: (path: string) => void;
+}
+
+export function TabBar({ onNavigate }: TabBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
 
   // Don't show tab bar on landing page
   if (pathname === '/') return null;
+
+  const handleClick = (path: string) => {
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      router.push(path);
+    }
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-[env(safe-area-inset-bottom)] shadow-lg">
@@ -56,7 +68,7 @@ export function TabBar() {
           return (
             <button
               key={tab.path}
-              onClick={() => router.push(tab.path)}
+              onClick={() => handleClick(tab.path)}
               className="relative w-full h-full"
             >
               <motion.div
@@ -83,5 +95,5 @@ export function TabBar() {
         })}
       </nav>
     </div>
-  )
+  );
 } 
