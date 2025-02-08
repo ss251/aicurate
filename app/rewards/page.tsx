@@ -51,7 +51,7 @@ export default function RewardsCollectibles() {
       name: 'Miss Tech Explorer',
       type: 'NFT',
       description: 'Your unique avatar NFT representing your AI journey',
-      image: '/images/miss-tech.png',
+      image: '/misstechexplorer.jpg',
       rarity: 'Unique',
       owned: true,
       mintedAt: new Date().toISOString(),
@@ -62,7 +62,7 @@ export default function RewardsCollectibles() {
       name: 'Review Champion',
       type: 'NFT',
       description: 'Earned for outstanding AI app reviews',
-      image: '/images/review-champion.png',
+      image: '/missreview.jpg',
       rarity: 'Rare',
       owned: true
     },
@@ -71,7 +71,7 @@ export default function RewardsCollectibles() {
       name: 'AI Pioneer Token',
       type: 'token',
       description: 'Exclusive token for early platform contributors',
-      image: '/images/ai-pioneer.png',
+      image: '/madamenft2.jpg',
       owned: true
     }
   ]
@@ -82,17 +82,18 @@ export default function RewardsCollectibles() {
       name: 'Miss Artsy',
       type: 'NFT',
       description: 'Limited edition NFT for art generation enthusiasts',
-      image: '/images/miss-artsy.png',
+      image: '/missartsy.jpg',
       rarity: 'Legendary',
       price: 0.5
     },
     {
       id: '5',
-      name: 'AI Explorer Hoodie',
+      name: 'Madame DAPP.AI Hoodie',
       type: 'merchandise',
-      description: 'Premium hoodie with your avatar design',
-      image: '/images/explorer-hoodie.png',
-      price: 45
+      description: 'Limited edition black hoodie featuring Madame DAPP.AI artwork',
+      image: '/hoodie.jpg',
+      price: 75,
+      rarity: 'Limited Edition'
     }
   ]
 
