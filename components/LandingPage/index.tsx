@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { MiniKit, VerifyCommandInput, VerificationLevel } from "@worldcoin/minikit-js";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function LandingPage() {
   const [username, setUsername] = useState("");
@@ -77,9 +78,16 @@ export function LandingPage() {
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-16 h-16 bg-blue-100 rounded-full mx-auto flex items-center justify-center"
+          className="w-24 h-24 mx-auto mb-4"
         >
-          <span className="text-2xl">🌍</span>
+          <Image
+            src="/aicuratelogo.png"
+            alt="AICurate Logo"
+            width={96}
+            height={96}
+            className="object-contain"
+            priority
+          />
         </motion.div>
         <h1 className="text-2xl font-bold text-gray-900">Welcome to AICurate</h1>
         <p className="text-gray-600">
