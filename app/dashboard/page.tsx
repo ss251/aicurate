@@ -328,10 +328,10 @@ export default function UserDashboard() {
 
   return (
     <div className="p-4">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-black">User Dashboard</h2>
-        <p className="text-gray-600">Track your progress and explore trending AI apps</p>
-      </div>
+      <header className="mb-6 border-b pb-4 -mx-4 px-4">
+        <h1 className="text-xl font-semibold">User Dashboard</h1>
+        <p className="text-sm text-gray-600">Track your progress and explore trending AI apps</p>
+      </header>
 
       <div className="mb-4">
         <nav className="grid grid-cols-2 gap-2">

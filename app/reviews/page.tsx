@@ -227,8 +227,8 @@ export default function ReviewPage() {
   return (
     <div className="pb-20">
       <header className="p-4 border-b sticky top-0 bg-white z-10">
-        <h1 className="text-xl font-semibold">Review AI App</h1>
-        <p className="text-sm text-gray-600">Share your experience and help others make informed decisions</p>
+        <h1 className="text-xl font-semibold">AI App Review</h1>
+        <p className="text-sm text-gray-600">Rate and review AI tools to help the community</p>
       </header>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-6">
