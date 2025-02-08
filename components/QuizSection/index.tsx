@@ -9,28 +9,53 @@ import Image from "next/image";
 const questions = [
   {
     question: "What interests you the most?",
-    options: ["AI & Tech", "Gaming", "Art & Design", "Business", "Education"]
+    options: [
+      { label: "AI & Tech", icon: "🤖" },
+      { label: "Gaming", icon: "🎮" },
+      { label: "Art & Design", icon: "🎨" },
+      { label: "Business", icon: "💼" },
+      { label: "Education", icon: "📚" }
+    ]
   },
   {
     question: "Which part of the world do you live in?",
-    options: ["North America", "Europe", "Asia", "Africa", "South America", "Oceania"]
+    options: [
+      { label: "North America", icon: "🌎" },
+      { label: "Europe", icon: "🌍" },
+      { label: "Asia", icon: "🌏" },
+      { label: "Africa", icon: "🌍" },
+      { label: "South America", icon: "🌎" },
+      { label: "Oceania", icon: "🌏" }
+    ]
   },
   {
     question: "What do you use AI Apps for?",
-    options: ["Work", "Personal Projects", "Entertainment", "Learning", "Business"]
+    options: [
+      { label: "Work", icon: "💼" },
+      { label: "Personal Projects", icon: "🎯" },
+      { label: "Entertainment", icon: "🎭" },
+      { label: "Learning", icon: "📚" },
+      { label: "Business", icon: "📊" }
+    ]
   },
   {
     question: "What social media platform do you use the most?",
-    options: ["Twitter/X", "Instagram", "LinkedIn", "TikTok", "YouTube"]
+    options: [
+      { label: "Twitter/X", icon: "🐦" },
+      { label: "Instagram", icon: "📸" },
+      { label: "LinkedIn", icon: "💼" },
+      { label: "TikTok", icon: "🎵" },
+      { label: "YouTube", icon: "🎥" }
+    ]
   },
   {
     question: "What's your relationship with AI?",
     options: [
-      "I am Gen Z and I breathe AI",
-      "I am a millennial and I embrace AI",
-      "I am a boomer but I am open to AI",
-      "I am skeptical but willing to learn",
-      "I am not comfortable with AI"
+      { label: "I am Gen Z and I breathe AI", icon: "⚡" },
+      { label: "I am a millennial and I embrace AI", icon: "🚀" },
+      { label: "I am a boomer but I am open to AI", icon: "🌟" },
+      { label: "I am skeptical but willing to learn", icon: "🤔" },
+      { label: "I am not comfortable with AI", icon: "😅" }
     ]
   }
 ];
@@ -87,11 +112,12 @@ export function QuizSection() {
               <div className="space-y-2">
                 {questions[currentQuestion].options.map((option) => (
                   <button
-                    key={option}
-                    onClick={() => handleAnswer(option)}
-                    className="w-full p-4 text-left text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    key={option.label}
+                    onClick={() => handleAnswer(option.label)}
+                    className="w-full p-4 text-left text-gray-700 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center gap-3"
                   >
-                    {option}
+                    <span className="text-2xl">{option.icon}</span>
+                    <span>{option.label}</span>
                   </button>
                 ))}
               </div>
