@@ -100,9 +100,9 @@ export function QuizSection() {
               Create Your Avatar Profile
             </h1>
             {currentQuestion === 0 && (
-              <p className="text-center text-gray-600">
-                Your avatar evolves with you. It is like an instant polaroid of who you are right now. So smile and get started now to get your first reward.
-              </p>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Your avatar grows and evolves with every step you take—it&apos;s a snapshot of who you are today. Dive in, answer a few fun questions, and unlock your first reward on this exciting journey!
+            </p>
             )}
 
             <div className="space-y-4">
@@ -132,8 +132,8 @@ export function QuizSection() {
           >
             <div className="relative w-full aspect-square max-w-[400px] mx-auto">
               <Image
-                src="/Madame DAPPAI.png"
-                alt="Madame DAPPAI NFT"
+                src="/nft-placeholder.png"
+                alt="Your NFT"
                 fill
                 className="object-cover rounded-lg shadow-xl"
                 sizes="(max-width: 300px) 100vw, 300px"
