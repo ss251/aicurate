@@ -101,7 +101,7 @@ export function QuizSection() {
             </h1>
             {currentQuestion === 0 && (
               <p className="text-center text-gray-600">
-                Your avatar grows and evolves with every step you take—it&apos;s a snapshot of who you are today. Dive in, answer a few fun questions, and unlock your first reward on this exciting journey!
+                Your avatar evolves with you. It is like an instant polaroid of who you are right now. So smile and get started now to get your first reward.
               </p>
             )}
 
@@ -132,7 +132,7 @@ export function QuizSection() {
           >
             <div className="relative w-full aspect-square max-w-[400px] mx-auto">
               <Image
-                src="/madame-dappai.png"
+                src="/Madame DAPPAI.png"
                 alt="Madame DAPPAI NFT"
                 fill
                 className="object-cover rounded-lg shadow-xl"
@@ -144,10 +144,10 @@ export function QuizSection() {
               </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
-              Welcome to the DAPPAI Community!
+              Congratulations! Your Avatar NFT is Ready
             </h2>
             <p className="text-gray-600">
-              Your unique Madame DAPPAI NFT has been minted. This is your key to the community and will evolve as you contribute.
+              Your unique NFT has been minted and added to your collection.
             </p>
             <button
               onClick={handleContinue}
