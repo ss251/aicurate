@@ -84,7 +84,8 @@ export default function RewardsCollectibles() {
       description: 'Limited edition NFT for art generation enthusiasts',
       image: '/missartsy.jpg',
       rarity: 'Legendary',
-      price: 0.5
+      price: 0.5,
+      owned: true
     },
     {
       id: '5',
@@ -93,7 +94,8 @@ export default function RewardsCollectibles() {
       description: 'Limited edition black hoodie featuring Madame DAPP.AI artwork',
       image: '/hoodie.jpg',
       price: 75,
-      rarity: 'Limited Edition'
+      rarity: 'Limited Edition',
+      owned: true
     }
   ]
 
