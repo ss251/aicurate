@@ -1,9 +1,11 @@
-import { LandingPage } from "@/components/LandingPage";
+'use client';
+
+import { Onboarding } from "@/components/Onboarding";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <LandingPage />
+    <main className="h-[100dvh] overflow-hidden">
+      <Onboarding />
     </main>
   );
 }
