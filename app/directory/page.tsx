@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { AiConsultation } from '@/components/AiConsultation'
 import { motion } from 'framer-motion'
 import { Search, Bot, Sparkles, Star, ChevronRight } from 'lucide-react'
+import { debounce } from 'lodash'
 
 interface AppCategory {
   id: string
@@ -85,6 +86,68 @@ export default function MadameDappai() {
   const [isSubmittingApp, setIsSubmittingApp] = useState(false)
   const [showConsultation, setShowConsultation] = useState(false)
 
+  // Debounce search input
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setSearchQuery(value)
+    }, 300),
+    []
+  )
+
+  // Cleanup function for debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel()
+    }
+  }, [debouncedSearch])
+
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(e.target.value)
+  }, [debouncedSearch])
+
+  // Memoize the featured apps data
+  const featuredApps = useMemo(() => [
+    {
+      name: 'ChatGPT',
+      description: 'Leading conversational AI model',
+      rating: 4.9,
+      reviews: 2500,
+      icon: '💬',
+      category: 'Text Generation'
+    },
+    {
+      name: 'Midjourney',
+      description: 'Advanced AI image generation',
+      rating: 4.8,
+      reviews: 1800,
+      icon: '🎨',
+      category: 'Image Generation'
+    },
+    {
+      name: 'Claude',
+      description: 'Intelligent AI assistant',
+      rating: 4.7,
+      reviews: 1200,
+      icon: '🤖',
+      category: 'Text Generation'
+    }
+  ], []) // Empty dependency array since this data is static
+
+  // Filter apps based on search query and category
+  const filteredApps = useMemo(() => {
+    return featuredApps.filter(app => {
+      const matchesSearch = searchQuery === '' || 
+        app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.category.toLowerCase().includes(searchQuery.toLowerCase())
+
+      const matchesCategory = !selectedCategory || 
+        app.category.toLowerCase() === selectedCategory.toLowerCase()
+
+      return matchesSearch && matchesCategory
+    })
+  }, [searchQuery, selectedCategory, featuredApps])
+
   const categories: AppCategory[] = [
     {
       id: 'image',
@@ -118,30 +181,6 @@ export default function MadameDappai() {
     }
   ]
 
-  const featuredApps = [
-    {
-      name: 'ChatGPT',
-      description: 'Leading conversational AI model',
-      rating: 4.9,
-      reviews: 2500,
-      icon: '💬'
-    },
-    {
-      name: 'Midjourney',
-      description: 'Advanced AI image generation',
-      rating: 4.8,
-      reviews: 1800,
-      icon: '🎨'
-    },
-    {
-      name: 'Claude',
-      description: 'Intelligent AI assistant',
-      rating: 4.7,
-      reviews: 1200,
-      icon: '🤖'
-    }
-  ]
-
   return (
     <div className="h-full flex flex-col">
       <header className="p-4 border-b sticky top-0 bg-white z-10">
@@ -156,8 +195,7 @@ export default function MadameDappai() {
             <input
               type="text"
               placeholder="Search AI tools..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearch}
               className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -204,31 +242,37 @@ export default function MadameDappai() {
               <button className="text-sm text-blue-600">See all</button>
             </div>
             <div className="grid grid-cols-1 gap-3">
-              {featuredApps.map((app) => (
-                <motion.div
-                  key={app.name}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="bg-white border border-gray-200 rounded-xl p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
-                      {app.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-medium truncate">{app.name}</h3>
-                        <div className="flex items-center gap-1 text-sm">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="font-medium">{app.rating}</span>
-                        </div>
+              {filteredApps.length > 0 ? (
+                filteredApps.map((app) => (
+                  <motion.div
+                    key={app.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="bg-white border border-gray-200 rounded-xl p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
+                        {app.icon}
                       </div>
-                      <p className="text-sm text-gray-600 truncate">{app.description}</p>
-                      <p className="text-xs text-gray-500 mt-1">{app.reviews.toLocaleString()} reviews</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-medium truncate">{app.name}</h3>
+                          <div className="flex items-center gap-1 text-sm">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            <span className="font-medium">{app.rating}</span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 truncate">{app.description}</p>
+                        <p className="text-xs text-gray-500 mt-1">{app.reviews.toLocaleString()} reviews</p>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No apps found matching your search.</p>
+                </div>
+              )}
             </div>
           </section>
 
