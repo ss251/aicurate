@@ -132,8 +132,8 @@ export function QuizSection() {
           >
             <div className="relative w-full aspect-square max-w-[400px] mx-auto">
               <Image
-                src="/nft-placeholder.png"
-                alt="Your NFT"
+                src="/madame-dappai.png"
+                alt="Madame DAPPAI NFT"
                 fill
                 className="object-cover rounded-lg shadow-xl"
                 sizes="(max-width: 300px) 100vw, 300px"
@@ -144,10 +144,10 @@ export function QuizSection() {
               </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
-              Congratulations! Your Avatar NFT is Ready
+              Welcome to the DAPPAI Community!
             </h2>
             <p className="text-gray-600">
-              Your unique NFT has been minted and added to your collection.
+              Your unique Madame DAPPAI NFT has been minted. This is your key to the community and will evolve as you contribute.
             </p>
             <button
               onClick={handleContinue}
