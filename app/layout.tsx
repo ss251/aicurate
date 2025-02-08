@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
+import { TabBar } from "@/components/navigation/TabBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,8 +43,11 @@ export default function RootLayout({
           <NextAuthProvider>
             <ErudaProvider>
               <MiniKitProvider>
-                <div className="h-full w-full max-w-screen-sm mx-auto bg-white">
-                  {children}
+                <div className="h-full w-full max-w-screen-sm mx-auto bg-white flex flex-col">
+                  <main className="flex-1 overflow-y-auto pb-16">
+                    {children}
+                  </main>
+                  <TabBar />
                 </div>
               </MiniKitProvider>
             </ErudaProvider>
