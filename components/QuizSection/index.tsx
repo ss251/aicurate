@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const questions = [
   {
@@ -103,13 +104,16 @@ export function QuizSection() {
             animate={{ opacity: 1, scale: 1 }}
             className="p-6 bg-white rounded-lg shadow-lg text-center space-y-6"
           >
-            <div className="relative w-96 h-96 mx-auto">
-              <img
+            <div className="relative w-full aspect-square max-w-[400px] mx-auto">
+              <Image
                 src="/nft-placeholder.png"
                 alt="Your NFT"
-                className="w-full h-full object-cover rounded-lg shadow-xl"
+                fill
+                className="object-cover rounded-lg shadow-xl"
+                sizes="(max-width: 300px) 100vw, 300px"
+                priority
               />
-              <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+              <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium z-10">
                 Minted!
               </div>
             </div>
