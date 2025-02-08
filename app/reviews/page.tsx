@@ -25,13 +25,13 @@ interface ReviewFormData {
 }
 
 const ratingCategories = [
-  { id: 'performance', label: 'Performance and Reliability' },
-  { id: 'security', label: 'Security and Privacy' },
-  { id: 'aiSpecific', label: 'AI-Specific Criteria' },
-  { id: 'community', label: 'Community and Ecosystem' },
-  { id: 'economic', label: 'Economic Model' },
-  { id: 'useCase', label: 'Use Case and Impact' },
-  { id: 'innovation', label: 'Innovation and Uniqueness' },
+  { id: 'performance', label: 'App Speed and Stability' },
+  { id: 'security', label: 'Data Privacy and Safety' },
+  { id: 'aiSpecific', label: 'AI Features and Intelligence' },
+  { id: 'community', label: 'Community Support' },
+  { id: 'economic', label: 'Value for Money' },
+  { id: 'useCase', label: 'Real-Life Usefulness' },
+  { id: 'innovation', label: 'Originality and Creativity' },
 ]
 
 const categories = [
