@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { MiniKit } from '@worldcoin/minikit-js';
 
 const questions = [
   {
@@ -60,11 +61,38 @@ const questions = [
   }
 ];
 
+// Minimal ABI for ERC721 mint function
+const NFT_ABI = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      }
+    ],
+    "name": "safeMint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+// Contract address on World Chain Sepolia
+const NFT_CONTRACT_ADDRESS = '0x761eDad8F522a153096110e0B88513BAbb19fCf4';
+
 export function QuizSection() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showReveal, setShowReveal] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintError, setMintError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleAnswer = (answer: string) => {
@@ -81,8 +109,53 @@ export function QuizSection() {
     }
   };
 
-  const handleContinue = () => {
-    router.push("/dashboard");
+  const handleMintNFT = async () => {
+    setIsMinting(true);
+    setMintError(null);
+
+    try {
+      if (!MiniKit.isInstalled()) {
+        throw new Error('Please install World App to continue');
+      }
+
+      // Connect wallet if not connected
+      if (!MiniKit.walletAddress) {
+        const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
+          nonce: crypto.randomUUID().replace(/-/g, ""),
+          statement: 'Connect your wallet to mint your NFT',
+          expirationTime: new Date(Date.now() + 1000 * 60 * 60) // 1 hour
+        });
+
+        if (finalPayload.status === 'error') {
+          throw new Error('Failed to connect wallet');
+        }
+      }
+
+      // Send transaction to mint NFT
+      const response = await MiniKit.commandsAsync.sendTransaction({
+        transaction: [{
+          address: NFT_CONTRACT_ADDRESS,
+          abi: NFT_ABI,
+          functionName: 'safeMint',
+          args: [
+            MiniKit.walletAddress as string,
+            'ipfs://QmdStFxJS9SNNEvxAk4U8jiwsEbRoStffQJUDyghxvgcvj/0'
+          ]
+        }]
+      });
+
+      if (!response?.finalPayload || response.finalPayload.status === 'error') {
+        throw new Error('Failed to mint NFT');
+      }
+
+      // Navigate to dashboard after successful mint
+      router.push("/dashboard");
+    } catch (error) {
+      console.error('Minting error:', error);
+      setMintError(error instanceof Error ? error.message : 'Failed to mint NFT');
+    } finally {
+      setIsMinting(false);
+    }
   };
 
   return (
@@ -140,20 +213,35 @@ export function QuizSection() {
                 priority
               />
               <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium z-10">
-                Minted!
+                Ready to Mint!
               </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
               Congratulations! Your Avatar NFT is Ready
             </h2>
             <p className="text-gray-600">
-              Your unique NFT has been minted and added to your collection.
+              Your unique NFT is ready to be minted on World Chain. Click below to mint and add it to your collection.
             </p>
+            {mintError && (
+              <p className="text-sm text-red-600">{mintError}</p>
+            )}
             <button
-              onClick={handleContinue}
-              className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              onClick={isMinting ? undefined : handleMintNFT}
+              disabled={isMinting}
+              className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
             >
-              Continue to Your Dashboard
+              {isMinting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <motion.span
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
+                  Minting...
+                </span>
+              ) : (
+                'Mint NFT'
+              )}
             </button>
           </motion.div>
         )}
