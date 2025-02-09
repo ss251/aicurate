@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Star, Gift, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const slides = [
   {
     id: 1,
     title: "Welcome to\nAICurate",
     description: "Your trusted companion in discovering and reviewing AI tools",
-    Icon: Bot,
+    image: "/Madame DAPPAI.png",
     color: "bg-[#4285F4]",
     points: [
       "Find the best AI tools for your needs",
@@ -22,7 +23,7 @@ const slides = [
     id: 2,
     title: "Review & Earn",
     description: "Share your experiences and earn rewards for quality reviews",
-    Icon: Star,
+    image: "/madamenft2.jpg",
     color: "bg-[#9747FF]",
     points: [
       "Write detailed AI app reviews",
@@ -33,7 +34,7 @@ const slides = [
     id: 3,
     title: "Unlock Rewards",
     description: "Collect unique NFTs and rewards for your contributions",
-    Icon: Gift,
+    image: "/madamenft2.jpg",
     color: "bg-[#22C55E]",
     points: [
       "Earn exclusive NFT badges",
@@ -57,8 +58,6 @@ export function Onboarding() {
     }
   };
 
-  const CurrentIcon = slides[currentSlide].Icon;
-
   return (
     <div className="h-full flex flex-col bg-white">
       <div className="flex-1 relative overflow-hidden">
@@ -71,14 +70,18 @@ export function Onboarding() {
             transition={{ duration: 0.2 }}
             className="h-full flex flex-col px-6"
           >
-            {/* Icon Container */}
+            {/* Image Container */}
             <div className={cn(
-              "w-full aspect-square rounded-[32px] flex items-center justify-center mb-6 mt-6",
+              "w-full aspect-square rounded-[32px] flex items-center justify-center mb-6 mt-6 overflow-hidden relative",
               slides[currentSlide].color
             )}>
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                <CurrentIcon className="w-8 h-8 text-white" />
-              </div>
+              <Image
+                src={slides[currentSlide].image}
+                alt={slides[currentSlide].title}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
 
             {/* Text Content */}

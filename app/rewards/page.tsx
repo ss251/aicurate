@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Wallet, Package, Trophy } from 'lucide-react'
+import { Wallet, Package, Trophy, Bot } from 'lucide-react'
 import { MiniKit, Tokens } from '@worldcoin/minikit-js'
+import { AiConsultation } from '@/components/AiConsultation'
 
 interface Collectible {
   id: string
@@ -34,6 +35,7 @@ export default function RewardsCollectibles() {
   const [isLoading, setIsLoading] = useState(false)
   const [walletAddress, setWalletAddress] = useState<string>('')
   const [username, setUsername] = useState<string>('Explorer')
+  const [showConsultation, setShowConsultation] = useState(false)
 
   useEffect(() => {
     // Get username from localStorage
@@ -261,6 +263,39 @@ export default function RewardsCollectibles() {
       </header>
 
       <div className="p-4">
+        {/* AI Consultation Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white mb-6"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+              <Bot className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-lg">Ask Madame Dappai</h2>
+              <p className="text-sm text-white/80">Get personalized NFT recommendations</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowConsultation(prev => !prev)}
+            className="w-full py-2.5 bg-white text-blue-600 rounded-lg font-medium flex items-center justify-center gap-2"
+          >
+            {showConsultation ? 'Close Consultation' : 'Start Consultation'}
+          </button>
+        </motion.div>
+
+        {showConsultation && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-6"
+          >
+            <AiConsultation />
+          </motion.div>
+        )}
+
         {/* Avatar Card */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

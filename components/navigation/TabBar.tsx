@@ -48,8 +48,8 @@ export function TabBar({ onNavigate, className }: TabBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Don't show tab bar on landing page
-  if (pathname === '/') return null;
+  // Don't show tab bar on landing page or root
+  if (pathname === '/' || pathname === '/landing') return null;
 
   const handleClick = (path: string) => {
     if (onNavigate) {
