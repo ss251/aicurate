@@ -118,16 +118,44 @@ export default function RewardsCollectibles() {
         throw new Error('Please install World App to continue')
       }
 
+      // Get nonce from backend
+      const nonceResponse = await fetch('/api/nonce')
+      if (!nonceResponse.ok) {
+        throw new Error('Failed to get nonce')
+      }
+      const { nonce } = await nonceResponse.json()
+
       // Connect wallet if not connected
       if (!MiniKit.walletAddress) {
         const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
-          nonce: crypto.randomUUID().replace(/-/g, ""),
+          nonce,
           statement: 'Connect your wallet to purchase items',
           expirationTime: new Date(Date.now() + 1000 * 60 * 60) // 1 hour
         })
 
         if (finalPayload.status === 'error') {
           throw new Error('Failed to connect wallet')
+        }
+
+        // Verify SIWE message
+        const verifyResponse = await fetch('/api/complete-siwe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            payload: finalPayload,
+            nonce,
+          }),
+        })
+
+        if (!verifyResponse.ok) {
+          throw new Error('Failed to verify wallet connection')
+        }
+
+        const { address } = await verifyResponse.json()
+        if (!address) {
+          throw new Error('No wallet address returned')
         }
       }
 
