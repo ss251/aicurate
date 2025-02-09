@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { useReviewFormStore } from '@/store/review-form'
+import { MiniKit, VerifyCommandInput, VerificationLevel } from '@worldcoin/minikit-js'
 
 interface ReviewFormData {
   appName: string
@@ -202,20 +203,57 @@ export default function ReviewPage() {
 
   // Clear saved data on successful submit
   const onSubmit = async (data: ReviewFormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Review submitted:', data)
-      clearForm()
-      toast.success('Review submitted successfully!')
-      router.push('/dashboard')  // Navigate after successful submit
+      if (!MiniKit.isInstalled()) {
+        throw new Error('Please install World App to continue');
+      }
+
+      // Verify with World ID
+      const verifyPayload: VerifyCommandInput = {
+        action: "submit-review",
+        verification_level: VerificationLevel.Orb
+      };
+
+      const response = await MiniKit.commandsAsync.verify(verifyPayload);
+      
+      if (!response || !response.finalPayload) {
+        throw new Error("Invalid response from World App");
+      }
+
+      const { finalPayload } = response;
+      if (finalPayload.status === "error") {
+        throw new Error("Verification failed");
+      }
+
+      // Verify the proof in the backend
+      const verifyResponse = await fetch("/api/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          payload: finalPayload,
+          action: "submit-review",
+          reviewData: data
+        }),
+      });
+
+      if (!verifyResponse.ok) {
+        throw new Error("Backend verification failed");
+      }
+
+      // Clear saved data on success
+      clearForm();
+      toast.success('Review submitted successfully!');
+      router.push('/dashboard');
     } catch (error) {
-      console.error('Error:', error)
-      toast.error('Failed to submit review')
+      console.error('Error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to submit review');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="pb-20">
