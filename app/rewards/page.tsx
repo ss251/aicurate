@@ -102,6 +102,42 @@ export default function RewardsCollectibles() {
     },
     {
       id: '5',
+      name: 'Madame Goals',
+      type: 'NFT',
+      description: 'Exclusive NFT celebrating achievement and ambition',
+      image: '/madamgoals.jpg',
+      rarity: 'Epic',
+      price: 0.4
+    },
+    {
+      id: '6',
+      name: 'Miss Afro',
+      type: 'NFT',
+      description: 'Celebrating diversity and cultural heritage in AI',
+      image: '/missafro.jpg',
+      rarity: 'Legendary',
+      price: 0.5
+    },
+    {
+      id: '7',
+      name: 'Miss Urban',
+      type: 'NFT',
+      description: 'Urban lifestyle and city vibes NFT collection',
+      image: '/missurban.jpg',
+      rarity: 'Epic',
+      price: 0.4
+    },
+    {
+      id: '8',
+      name: 'Miss Shero',
+      type: 'NFT',
+      description: 'Empowering superhero-themed NFT collection',
+      image: '/shero.jpg',
+      rarity: 'Legendary',
+      price: 0.5
+    },
+    {
+      id: '9',
       name: 'Madame DAPP.AI Hoodie',
       type: 'merchandise',
       description: 'Limited edition black hoodie featuring Madame DAPP.AI artwork',
