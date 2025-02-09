@@ -5,6 +5,7 @@ import { AiConsultation } from '@/components/AiConsultation'
 import { motion } from 'framer-motion'
 import { Search, Bot, Sparkles, Star, ChevronRight } from 'lucide-react'
 import { debounce } from 'lodash'
+import Image from 'next/image'
 
 interface AppCategory {
   id: string
@@ -85,6 +86,15 @@ export default function MadameDappai() {
   const [selectedApp, setSelectedApp] = useState<AppDetails | null>(null)
   const [isSubmittingApp, setIsSubmittingApp] = useState(false)
   const [showConsultation, setShowConsultation] = useState(false)
+  const [username, setUsername] = useState<string>('Explorer')
+
+  useEffect(() => {
+    // Get username from localStorage
+    const storedUsername = localStorage.getItem('username')
+    if (storedUsername) {
+      setUsername(storedUsername)
+    }
+  }, [])
 
   // Debounce search input
   const debouncedSearch = useCallback(
@@ -184,8 +194,24 @@ export default function MadameDappai() {
   return (
     <div className="h-full flex flex-col">
       <header className="p-4 border-b sticky top-0 bg-white z-10">
-        <h1 className="text-xl font-semibold">AI Guide</h1>
-        <p className="text-sm text-gray-600">Discover and explore AI tools with Madame Dappai</p>
+        <div className="flex items-center gap-4 mb-3">
+          <div className="relative w-16 h-16">
+            <Image
+              src="/madamdappai.jpg"
+              alt="Madame DAPP.AI"
+              fill
+              className="object-cover rounded-full"
+              sizes="64px"
+              priority
+            />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold">AI Guide</h1>
+            <p className="text-sm text-gray-600">
+              Welcome {username}, let me help you discover the perfect AI tools
+            </p>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1 overflow-y-auto">
