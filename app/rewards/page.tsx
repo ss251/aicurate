@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Wallet, Package, Trophy } from 'lucide-react'
+import { MiniKit, Tokens } from '@worldcoin/minikit-js'
 
 interface Collectible {
   id: string
@@ -29,15 +29,29 @@ interface UserAvatar {
 }
 
 export default function RewardsCollectibles() {
-  const { user } = usePrivy()
   const [activeTab, setActiveTab] = useState<'inventory' | 'store'>('inventory')
   const [selectedItem, setSelectedItem] = useState<Collectible | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [walletAddress, setWalletAddress] = useState<string>('')
+  const [username, setUsername] = useState<string>('Explorer')
+
+  useEffect(() => {
+    // Get username from localStorage
+    const storedUsername = localStorage.getItem('username')
+    if (storedUsername) {
+      setUsername(storedUsername)
+    }
+
+    // Get wallet address if already connected
+    if (MiniKit.isInstalled() && MiniKit.walletAddress) {
+      setWalletAddress(MiniKit.walletAddress)
+    }
+  }, [])
 
   // Sample user avatar data
   const userAvatar: UserAvatar = {
     id: '1',
-    name: 'Tech Explorer',
+    name: username,
     type: 'Professional',
     level: 3,
     experience: 750,
@@ -100,11 +114,76 @@ export default function RewardsCollectibles() {
   const handlePurchase = async (item: Collectible) => {
     setIsLoading(true)
     try {
-      // Simulate purchase transaction
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Purchasing item:', item.id)
+      if (!MiniKit.isInstalled()) {
+        alert('Please install World App to continue')
+        return
+      }
+
+      // If wallet not connected, connect first
+      if (!walletAddress) {
+        const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
+          nonce: crypto.randomUUID().replace(/-/g, ""),
+          statement: 'Connect your wallet to purchase items',
+          expirationTime: new Date(Date.now() + 1000 * 60 * 60) // 1 hour
+        })
+
+        if (finalPayload.status === 'error') {
+          throw new Error('Failed to connect wallet')
+        }
+
+        setWalletAddress(finalPayload.address)
+      }
+
+      // Initialize payment
+      const initResponse = await fetch('/api/initiate-payment', {
+        method: 'POST'
+      })
+      
+      if (!initResponse.ok) {
+        throw new Error('Failed to initialize payment')
+      }
+      
+      const { id: reference } = await initResponse.json()
+
+      // Send payment transaction
+      const response = await MiniKit.commandsAsync.pay({
+        to: process.env.NEXT_PUBLIC_WLD_APP_ID as string,
+        tokens: [{
+          symbol: item.type === 'NFT' ? Tokens.WLD : Tokens.USDCE,
+          token_amount: item.price?.toString() || '0'
+        }],
+        reference,
+        description: `Purchase ${item.name}`
+      })
+
+      if (!response?.finalPayload || response.finalPayload.status === 'error') {
+        throw new Error('Payment failed')
+      }
+
+      // Verify payment
+      const verifyResponse = await fetch('/api/confirm-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          payload: response.finalPayload
+        })
+      })
+
+      if (!verifyResponse.ok) {
+        throw new Error('Payment verification failed')
+      }
+
+      const { success } = await verifyResponse.json()
+      if (!success) {
+        throw new Error('Payment verification failed')
+      }
+
+      alert('Purchase successful!')
     } catch (error) {
-      console.error('Error purchasing item:', error)
+      console.error('Purchase error:', error)
+      alert(error instanceof Error ? error.message : 'Purchase failed')
     } finally {
       setIsLoading(false)
     }
