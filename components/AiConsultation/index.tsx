@@ -176,6 +176,31 @@ export function AiConsultation() {
         </div>
       </header>
 
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 border-b flex items-center gap-2 bg-white"
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder={credits > 0 ? "Ask Madame Dappai about AI tools..." : "Purchase credits to chat..."}
+          className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          disabled={isLoading || isPaymentPending || credits <= 0}
+        />
+        <button
+          type="submit"
+          disabled={isLoading || isPaymentPending || !input.trim() || credits <= 0}
+          className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Send className="w-5 h-5" />
+          )}
+        </button>
+      </form>
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
         {messages.map((message) => (
           <motion.div
@@ -222,31 +247,6 @@ export function AiConsultation() {
           </motion.div>
         )}
       </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="p-4 border-t flex items-center gap-2"
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder={credits > 0 ? "Ask Madame Dappai about AI tools..." : "Purchase credits to chat..."}
-          className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          disabled={isLoading || isPaymentPending || credits <= 0}
-        />
-        <button
-          type="submit"
-          disabled={isLoading || isPaymentPending || !input.trim() || credits <= 0}
-          className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Send className="w-5 h-5" />
-          )}
-        </button>
-      </form>
     </div>
   );
 } 
