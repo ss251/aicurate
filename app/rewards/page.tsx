@@ -140,6 +140,15 @@ export default function RewardsCollectibles() {
     },
     {
       id: '9',
+      name: 'Miss Perfect',
+      type: 'NFT',
+      description: 'Precision and excellence in AI performance',
+      image: '/missperfect.jpg',
+      rarity: 'Legendary',
+      price: 0.5
+    },
+    {
+      id: '10',
       name: 'Madame DAPP.AI Hoodie',
       type: 'merchandise',
       description: 'Limited edition black hoodie featuring Madame DAPP.AI artwork',
