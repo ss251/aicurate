@@ -115,12 +115,11 @@ export default function RewardsCollectibles() {
     setIsLoading(true)
     try {
       if (!MiniKit.isInstalled()) {
-        alert('Please install World App to continue')
-        return
+        throw new Error('Please install World App to continue')
       }
 
-      // If wallet not connected, connect first
-      if (!walletAddress) {
+      // Connect wallet if not connected
+      if (!MiniKit.walletAddress) {
         const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
           nonce: crypto.randomUUID().replace(/-/g, ""),
           statement: 'Connect your wallet to purchase items',
@@ -130,8 +129,6 @@ export default function RewardsCollectibles() {
         if (finalPayload.status === 'error') {
           throw new Error('Failed to connect wallet')
         }
-
-        setWalletAddress(finalPayload.address)
       }
 
       // Initialize payment
@@ -157,7 +154,7 @@ export default function RewardsCollectibles() {
       })
 
       if (!response?.finalPayload || response.finalPayload.status === 'error') {
-        throw new Error('Payment failed')
+        throw new Error('Failed to process payment')
       }
 
       // Verify payment
@@ -179,6 +176,9 @@ export default function RewardsCollectibles() {
       if (!success) {
         throw new Error('Payment verification failed')
       }
+
+      // Add item to inventory
+      // TODO: Update backend to reflect purchase
 
       alert('Purchase successful!')
     } catch (error) {

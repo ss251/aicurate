@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MiniKit } from '@worldcoin/minikit-js';
+import { useSession, signIn } from 'next-auth/react';
 
 const questions = [
   {
@@ -87,12 +88,14 @@ const NFT_ABI = [
 const NFT_CONTRACT_ADDRESS = '0x761eDad8F522a153096110e0B88513BAbb19fCf4';
 
 export function QuizSection() {
+  const { data: session } = useSession();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showReveal, setShowReveal] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [mintError, setMintError] = useState<string | null>(null);
+  const [isConnectingWallet, setIsConnectingWallet] = useState(false);
   const router = useRouter();
 
   const handleAnswer = (answer: string) => {
@@ -109,26 +112,49 @@ export function QuizSection() {
     }
   };
 
+  const connectWallet = async () => {
+    setIsConnectingWallet(true);
+    try {
+      if (!MiniKit.isInstalled()) {
+        throw new Error('Please install World App to continue');
+      }
+
+      // First sign in with World ID
+      await signIn('worldcoin', { callbackUrl: window.location.href });
+
+      // Then connect wallet
+      const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
+        nonce: crypto.randomUUID().replace(/-/g, ""),
+        statement: 'Connect your wallet to mint your NFT',
+        expirationTime: new Date(Date.now() + 1000 * 60 * 60) // 1 hour
+      });
+
+      if (finalPayload.status === 'error') {
+        throw new Error('Failed to connect wallet');
+      }
+
+      return finalPayload.address;
+    } catch (error) {
+      console.error('Wallet connection error:', error);
+      throw error;
+    } finally {
+      setIsConnectingWallet(false);
+    }
+  };
+
   const handleMintNFT = async () => {
     setIsMinting(true);
     setMintError(null);
 
     try {
+      // Check if World App is installed
       if (!MiniKit.isInstalled()) {
         throw new Error('Please install World App to continue');
       }
 
       // Connect wallet if not connected
       if (!MiniKit.walletAddress) {
-        const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
-          nonce: crypto.randomUUID().replace(/-/g, ""),
-          statement: 'Connect your wallet to mint your NFT',
-          expirationTime: new Date(Date.now() + 1000 * 60 * 60) // 1 hour
-        });
-
-        if (finalPayload.status === 'error') {
-          throw new Error('Failed to connect wallet');
-        }
+        await connectWallet();
       }
 
       // Send transaction to mint NFT
@@ -146,6 +172,13 @@ export function QuizSection() {
 
       if (!response?.finalPayload || response.finalPayload.status === 'error') {
         throw new Error('Failed to mint NFT');
+      }
+
+      // Wait for transaction confirmation
+      const transactionId = response.finalPayload.transaction_id;
+      if (transactionId) {
+        // You can add UI to show transaction status
+        console.log('Transaction ID:', transactionId);
       }
 
       // Navigate to dashboard after successful mint
