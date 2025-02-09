@@ -12,7 +12,7 @@ const slides = [
     id: 1,
     title: "Welcome to\nAICurate",
     description: "Your trusted companion in discovering and reviewing AI tools",
-    image: "/Madame DAPPAI.png",
+    image: "/onboarding/madame1.jpg",
     color: "bg-[#4285F4]",
     points: [
       "Find the best AI tools for your needs",
@@ -23,7 +23,7 @@ const slides = [
     id: 2,
     title: "Review & Earn",
     description: "Share your experiences and earn rewards for quality reviews",
-    image: "/madamenft2.jpg",
+    image: "/onboarding/madame2.jpg",
     color: "bg-[#9747FF]",
     points: [
       "Write detailed AI app reviews",
@@ -34,7 +34,7 @@ const slides = [
     id: 3,
     title: "Unlock Rewards",
     description: "Collect unique NFTs and rewards for your contributions",
-    image: "/madamenft2.jpg",
+    image: "/onboarding/madame3.jpg",
     color: "bg-[#22C55E]",
     points: [
       "Earn exclusive NFT badges",
@@ -71,15 +71,12 @@ export function Onboarding() {
             className="h-full flex flex-col px-6"
           >
             {/* Image Container */}
-            <div className={cn(
-              "w-full aspect-square rounded-[32px] flex items-center justify-center mb-6 mt-6 overflow-hidden relative",
-              slides[currentSlide].color
-            )}>
+            <div className="w-full aspect-square rounded-[32px] flex items-center justify-center mb-6 mt-6 overflow-hidden relative">
               <Image
                 src={slides[currentSlide].image}
                 alt={slides[currentSlide].title}
                 fill
-                className="object-cover"
+                className="object-cover rounded-[32px]"
                 priority
               />
             </div>
