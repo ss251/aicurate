@@ -2,14 +2,23 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Twitter, Linkedin, Facebook, Globe, Copy, X } from 'lucide-react';
+import Image from 'next/image';
 
 interface ShareMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onShare: (platform: 'twitter' | 'linkedin' | 'facebook' | 'world' | 'copy') => void;
+  onShare: (platform: 'twitter' | 'linkedin' | 'facebook' | 'world' | 'warpcast' | 'bluesky' | 'copy') => void;
 }
 
-const shareOptions = [
+interface ShareOption {
+  id: 'twitter' | 'linkedin' | 'facebook' | 'world' | 'warpcast' | 'bluesky' | 'copy';
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  customIcon?: string;
+  color: string;
+}
+
+const shareOptions: ShareOption[] = [
   {
     id: 'twitter',
     label: 'Twitter',
@@ -29,6 +38,18 @@ const shareOptions = [
     color: 'bg-[#1877F2]'
   },
   {
+    id: 'warpcast',
+    label: 'Warpcast',
+    customIcon: 'https://warpcast.com/og-logo.png',
+    color: 'bg-[#8A2BE2]'
+  },
+  {
+    id: 'bluesky',
+    label: 'Bluesky',
+    customIcon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Bluesky_Logo.svg/1200px-Bluesky_Logo.svg.png',
+    color: 'bg-[#0085FF]'
+  },
+  {
     id: 'world',
     label: 'Share to World',
     icon: Globe,
@@ -40,7 +61,7 @@ const shareOptions = [
     icon: Copy,
     color: 'bg-gray-600'
   }
-] as const;
+];
 
 export function ShareMenu({ isOpen, onClose, onShare }: ShareMenuProps) {
   return (
@@ -70,7 +91,7 @@ export function ShareMenu({ isOpen, onClose, onShare }: ShareMenuProps) {
               </div>
 
               <div className="grid grid-cols-4 gap-4 mb-6">
-                {shareOptions.map(({ id, label, icon: Icon, color }) => (
+                {shareOptions.map(({ id, label, icon: Icon, customIcon, color }) => (
                   <button
                     key={id}
                     onClick={() => {
@@ -79,8 +100,18 @@ export function ShareMenu({ isOpen, onClose, onShare }: ShareMenuProps) {
                     }}
                     className="flex flex-col items-center gap-2"
                   >
-                    <div className={`w-12 h-12 ${color} rounded-full flex items-center justify-center text-white`}>
-                      <Icon className="w-5 h-5" />
+                    <div className={`w-12 h-12 ${color} rounded-full flex items-center justify-center text-white relative`}>
+                      {customIcon ? (
+                        <Image
+                          src={customIcon}
+                          alt={label}
+                          width={20}
+                          height={20}
+                          className="w-5 h-5"
+                        />
+                      ) : Icon && (
+                        <Icon className="w-5 h-5" />
+                      )}
                     </div>
                     <span className="text-xs text-gray-600">{label}</span>
                   </button>

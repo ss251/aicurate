@@ -138,7 +138,7 @@ export default function ReviewPage() {
     setValue(`ratings.${categoryId}`, value, { shouldDirty: true });
   }
 
-  const handleShare = async (platform: 'twitter' | 'linkedin' | 'facebook' | 'world' | 'copy') => {
+  const handleShare = async (platform: 'twitter' | 'linkedin' | 'facebook' | 'world' | 'warpcast' | 'bluesky' | 'copy') => {
     const shareText = `Check out my review of ${formData.appName} on AICurate!`
     const shareUrl = window.location.href
 
@@ -149,15 +149,15 @@ export default function ReviewPage() {
           '_blank'
         )
         break
-      case 'linkedin':
+      case 'warpcast':
         window.open(
-          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+          `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`,
           '_blank'
         )
         break
-      case 'facebook':
+      case 'bluesky':
         window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+          `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
           '_blank'
         )
         break
@@ -168,9 +168,10 @@ export default function ReviewPage() {
       case 'copy':
         try {
           await navigator.clipboard.writeText(shareUrl)
-          alert('Link copied to clipboard!')
+          toast.success('Link copied to clipboard!')
         } catch (error) {
           console.error('Error copying to clipboard:', error)
+          toast.error('Failed to copy link')
         }
         break
     }
